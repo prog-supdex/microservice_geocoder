@@ -2,20 +2,24 @@ module ApplicationLoader
   extend self
 
   def load_app!
-    load_root_path
-
+    init_config
     require_app
+    init_app
   end
 
   private
+
+  def init_config
+    require_file 'config/initializers/config'
+  end
 
   def require_app
     require_file 'config/application'
     require_dir 'app'
   end
 
-  def load_root_path
-    require_relative 'root_path'
+  def init_app
+    require_dir 'config/initializers'
   end
 
   def require_file(path)
@@ -24,7 +28,6 @@ module ApplicationLoader
 
   def require_dir(path)
     path = File.join(root, path)
-
     Dir["#{path}/**/*.rb"].each { |file| require file }
   end
 

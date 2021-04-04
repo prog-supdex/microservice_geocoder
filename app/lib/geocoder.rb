@@ -3,7 +3,7 @@ require 'csv'
 module Geocoder
   extend self
 
-  DATA_PATH = File.join(RootPath::PATH, 'db/data/city.csv').freeze
+  DATA_PATH = Application.root.concat('/db/data/city.csv').freeze
 
   def geocode(city)
     data[city]
