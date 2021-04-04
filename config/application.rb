@@ -1,7 +1,9 @@
-class Application < Roda
-  plugin :json
-  plugin :symbol_status
-  plugin :environments
+class Application
+  def self.root
+    File.expand_path('..', __dir__)
+  end
 
-  opts[:root] = RootPath::PATH
+  def self.environment
+    ENV.fetch('RACK_ENV').to_sym
+  end
 end
