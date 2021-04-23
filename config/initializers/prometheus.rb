@@ -7,4 +7,10 @@ Metrics.configure do |registry|
     docstring: 'The total number of geocoding requests.',
     labels: %i[result]
   )
+
+  registry.histogram(
+    :geocoding_requests_duration,
+    docstring: 'The duration of geocode by city',
+    labels: %i[result]
+  )
 end
