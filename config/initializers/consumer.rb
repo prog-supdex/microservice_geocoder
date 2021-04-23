@@ -1,3 +1,5 @@
+require 'benchmark'
+
 channel = RabbitMq.consumer_channel
 queue = channel.queue('geocoding', durable: true)
 
@@ -5,7 +7,12 @@ queue.subscribe(manual_ack: true) do |delivery_info, properties, payload|
   Thread.current[:request_id] = properties.headers['request_id']
 
   payload = JSON(payload)
-  coordinates = Geocoder.geocode(payload['city'])
+
+  coordinates = nil
+
+  Metrics.geocoding_requests_duration.observe(
+    Benchmark.realtime { coordinates = Geocoder.geocode(payload['city']) }, labels: { result: :coordinates }
+  )
 
   Application.logger.info(
     'geocoded coordinates',
